@@ -30,41 +30,171 @@ const TextProcessor = () => {
     return corrected;
   };
 
-  // Mock translation function (English to Hindi)
+  // Enhanced translation function (English to Hindi)
   const translateToHindi = (text: string): string => {
     if (!text.trim()) return "";
     
-    // Simple mock translations for demo
+    // Enhanced dictionary with common words and phrases
     const translations: { [key: string]: string } = {
+      // Greetings & Common phrases
       "hello": "नमस्ते",
-      "world": "दुनिया",
-      "good": "अच्छा",
-      "morning": "सुबह",
-      "evening": "शाम",
-      "night": "रात",
+      "hi": "हैलो",
+      "goodbye": "अलविदा",
+      "bye": "बाय",
+      "good morning": "शुभ प्रभात",
+      "good evening": "शुभ संध्या",
+      "good night": "शुभ रात्रि",
       "thank you": "धन्यवाद",
+      "thanks": "धन्यवाद",
       "welcome": "स्वागत",
       "please": "कृपया",
       "sorry": "माफ करें",
+      "excuse me": "माफ करें",
+      
+      // Common words
       "yes": "हाँ",
       "no": "नहीं",
+      "okay": "ठीक है",
+      "ok": "ठीक है",
+      "and": "और",
+      "or": "या",
+      "but": "लेकिन",
+      "the": "",
+      "a": "",
+      "an": "",
+      "is": "है",
+      "are": "हैं",
+      "am": "हूँ",
+      "was": "था",
+      "were": "थे",
+      "will": "होगा",
+      "would": "होगा",
+      "can": "सकते हैं",
+      "could": "सकते थे",
+      "have": "पास है",
+      "has": "पास है",
+      "had": "था",
+      "do": "करते हैं",
+      "does": "करता है",
+      "did": "किया",
+      "will be": "होगा",
+      "going": "जा रहे",
+      "come": "आओ",
+      "go": "जाओ",
+      
+      // Basic nouns
+      "world": "दुनिया",
       "water": "पानी",
       "food": "खाना",
       "house": "घर",
+      "home": "घर",
       "family": "परिवार",
       "friend": "दोस्त",
+      "friends": "दोस्त",
       "love": "प्यार",
+      "time": "समय",
+      "day": "दिन",
+      "today": "आज",
+      "tomorrow": "कल",
+      "yesterday": "कल",
+      "week": "सप्ताह",
+      "month": "महीना",
+      "year": "साल",
+      "money": "पैसा",
+      "work": "काम",
+      "job": "नौकरी",
+      "school": "स्कूल",
+      "book": "किताब",
+      "car": "गाड़ी",
+      "phone": "फोन",
+      "computer": "कंप्यूटर",
+      "mother": "माँ",
+      "father": "पिता",
+      "brother": "भाई",
+      "sister": "बहन",
+      "son": "बेटा",
+      "daughter": "बेटी",
+      "man": "आदमी",
+      "woman": "औरत",
+      "boy": "लड़का",
+      "girl": "लड़की",
+      "people": "लोग",
+      "person": "व्यक्ति",
+      
+      // Adjectives
+      "good": "अच्छा",
+      "bad": "बुरा",
       "happy": "खुश",
-      "sad": "उदास"
+      "sad": "उदास",
+      "big": "बड़ा",
+      "small": "छोटा",
+      "new": "नया",
+      "old": "पुराना",
+      "hot": "गर्म",
+      "cold": "ठंड",
+      "beautiful": "सुंदर",
+      "nice": "अच्छा",
+      "great": "बहुत अच्छा",
+      "easy": "आसान",
+      "difficult": "कठिन",
+      "hard": "कठिन",
+      "fast": "तेज़",
+      "slow": "धीमा",
+      "right": "सही",
+      "wrong": "गलत",
+      "true": "सच",
+      "false": "झूठ",
+      
+      // Numbers
+      "one": "एक",
+      "two": "दो",
+      "three": "तीन",
+      "four": "चार",
+      "five": "पांच",
+      "six": "छह",
+      "seven": "सात",
+      "eight": "आठ",
+      "nine": "नौ",
+      "ten": "दस",
+      
+      // Colors
+      "red": "लाल",
+      "blue": "नीला",
+      "green": "हरा",
+      "yellow": "पीला",
+      "black": "काला",
+      "white": "सफेद",
+      "orange": "नारंगी",
+      "purple": "बैंगनी",
+      "pink": "गुलाबी",
+      "brown": "भूरा",
     };
 
+    // Process the text
     let translated = text.toLowerCase();
-    Object.entries(translations).forEach(([english, hindi]) => {
-      const regex = new RegExp(`\\b${english}\\b`, "gi");
-      translated = translated.replace(regex, hindi);
+    let hasTranslations = false;
+
+    // Sort by length (longest first) to handle phrases before individual words
+    const sortedTranslations = Object.entries(translations).sort((a, b) => b[0].length - a[0].length);
+    
+    sortedTranslations.forEach(([english, hindi]) => {
+      if (hindi) { // Skip empty translations (like "the", "a", "an")
+        const regex = new RegExp(`\\b${english.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, "gi");
+        if (regex.test(translated)) {
+          translated = translated.replace(regex, hindi);
+          hasTranslations = true;
+        }
+      } else {
+        // Remove articles
+        const regex = new RegExp(`\\b${english}\\b\\s*`, "gi");
+        translated = translated.replace(regex, "");
+      }
     });
 
-    return translated || "Translation: " + text + " (Hindi translation would appear here)";
+    // Clean up extra spaces
+    translated = translated.replace(/\s+/g, " ").trim();
+
+    return hasTranslations ? translated : `Hindi: ${text} (अधिक शब्द अनुवाद के लिए शब्दकोश में जोड़े जा सकते हैं)`;
   };
 
   const processText = async () => {
