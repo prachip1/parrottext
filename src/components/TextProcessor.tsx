@@ -118,8 +118,15 @@ const TextProcessor = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted to-secondary p-6">
       <div className="max-w-7xl mx-auto">
+        {/* Logo and Brand */}
+        <div className="flex items-center mb-8">
+          <div className="flex items-center gap-3">
+            <img src="/logo.png" alt="Parrot Logo" className="h-12 w-12 rounded-full shadow-lg border-2 border-gray-200 bg-white" />
+            <span className="font-bold text-xl text-indigo-900 tracking-tight drop-shadow-lg" style={{fontFamily: 'Poppins, sans-serif'}}>parrot<span className="text-green-500">Text</span></span>
+          </div>
+        </div>
         <div className="text-center mb-8">
-          <h1 className="text-gray-800 text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+          <h1 className="text-gray-800 text-4xl font-bold mb-4">
             Grammar Fixer & Language Translator
           </h1>
           <p className="text-muted-foreground text-lg text-gray-800">
@@ -133,7 +140,7 @@ const TextProcessor = () => {
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-primary text-gray-800">
                 <Wand2 className="w-5 h-5" />
-                Input Text
+                Paste Your Text
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -141,7 +148,7 @@ const TextProcessor = () => {
                 placeholder="Paste or type your text here..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="min-h-[300px] resize-none border-border/50 focus:border-primary transition-colors"
+                className="min-h-[300px] border-2 border-gray-200 resize-none rounded-sm transition-colors duration-300 focus:border-gray-400 active:border-gray-400 focus:outline-none"
               />
               <Button 
                 onClick={processText}
@@ -175,9 +182,9 @@ const TextProcessor = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(correctedText, "Corrected text")}
-                      className=""
+                      className="bg-transparent focus:bg-transparent active:bg-transparent"
                     >
-                      <Copy className="w-4 h-4 text-gray-800 hover:scale-50" />
+                      <Copy className="w-4 h-4 text-gray-800" />
                     </Button>
                   )}
                 </CardTitle>
@@ -187,7 +194,7 @@ const TextProcessor = () => {
                   {correctedText ? (
                     <p className="text-foreground leading-relaxed">{correctedText}</p>
                   ) : (
-                    <p className="text-muted-foreground italic">
+                    <p className="text-muted-foreground text-sm">
                       Corrected text will appear here...
                     </p>
                   )}
@@ -208,9 +215,9 @@ const TextProcessor = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(translatedText, "Translation")}
-                      className="hover:scale-75"
+                      className="bg-transparent focus:bg-transparent active:bg-transparent"
                     >
-                      <Copy className="w-4 h-4 text-gray-800 hover:scale-50" />
+                      <Copy className="w-4 h-4 text-gray-800" />
                     </Button>
                   )}
                 </CardTitle>
@@ -222,7 +229,7 @@ const TextProcessor = () => {
                       {translatedText}
                     </p>
                   ) : (
-                    <p className="text-muted-foreground italic">
+                    <p className="text-muted-foreground text-sm">
                       Hindi translation will appear here...
                     </p>
                   )}
