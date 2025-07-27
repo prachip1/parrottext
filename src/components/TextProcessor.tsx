@@ -126,7 +126,7 @@ const TextProcessor = () => {
           </div>
         </div>
         <div className="text-center mb-8">
-          <h1 className="text-gray-800 text-4xl font-bold mb-4">
+          <h1 className="text-gray-800 text-4xl font-semibold mb-4">
             Grammar Fixer & Language Translator
           </h1>
           <p className="text-muted-foreground text-lg text-gray-800">
@@ -170,12 +170,12 @@ const TextProcessor = () => {
           {/* Results Section */}
           <div className="space-y-6">
             {/* Grammar Correction */}
-            <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm">
+            <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm rounded-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center justify-between text-accent">
-                  <div className="flex items-center gap-2 text-gray-800">
-                    <CheckCircle className="w-5 h-5 text-gray-800" />
-                    Grammar Corrected
+                  <div className="flex items-center gap-2 text-gray-800 rounded-sm">
+                    <CheckCircle className="w-5 h-5 text-gray-600" />
+                  <span className="text-base text-gray-600">Grammar Corrected</span>  
                   </div>
                   {correctedText && (
                     <Button
@@ -207,8 +207,8 @@ const TextProcessor = () => {
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center justify-between text-primary">
                   <div className="flex items-center gap-2 text-gray-800">
-                    <Languages className="text-gray-800 w-5 h-5" />
-                    Hindi Translation
+                    <Languages className="text-gray-600 w-5 h-5" />
+                    <span className="text-base text-gray-600">Hindi Translation</span>
                   </div>
                   {translatedText && (
                     <Button
