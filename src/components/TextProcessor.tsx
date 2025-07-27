@@ -148,7 +148,7 @@ const TextProcessor = () => {
                 placeholder="Paste or type your text here..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="min-h-[300px] border-2 border-gray-200 resize-none rounded-sm transition-colors duration-300 focus:border-gray-400 active:border-gray-400 focus:outline-none"
+                className="custom-textarea min-h-[300px] border-2 border-gray-200 resize-none rounded-sm transition-colors duration-300 outline-none focus:outline-none focus:border-gray-400 active:border-gray-400 focus:ring-0 focus:ring-transparent"
               />
               <Button 
                 onClick={processText}
