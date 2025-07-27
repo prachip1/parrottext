@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { grammarCorrect } from "@/lib/grammarCorrect";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Copy, Languages, CheckCircle, Wand2 } from "lucide-react";
@@ -12,23 +13,40 @@ const TextProcessor = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
 
-  // Mock grammar correction function
-  const correctGrammar = (text: string): string => {
-    if (!text.trim()) return "";
-    
-    // Simple mock corrections for demo
-    let corrected = text
-      .replace(/\bi\b/g, "I")
-      .replace(/\bdont\b/g, "don't")
-      .replace(/\bcant\b/g, "can't")
-      .replace(/\bwont\b/g, "won't")
-      .replace(/\byour\b(?=\s+(welcome|right|wrong))/g, "you're")
-      .replace(/\bits\b(?=\s+(a|an|the))/g, "it's")
-      .replace(/([.!?])\s*([a-z])/g, (match, punct, letter) => punct + " " + letter.toUpperCase())
-      .replace(/^([a-z])/, (match, letter) => letter.toUpperCase());
-    
-    return corrected;
-  };
+  // ...existing code...
+
+  // Real-time grammar correction and translation
+  useEffect(() => {
+    let ignore = false;
+    const handler = setTimeout(() => {
+      const runAsync = async () => {
+        if (!inputText.trim()) {
+          setCorrectedText("");
+          setTranslatedText("");
+          return;
+        }
+        setIsProcessing(true);
+        try {
+          const corrected = await grammarCorrect(inputText);
+          if (!ignore) setCorrectedText(corrected);
+          const translated = await translateToHindi(corrected);
+          if (!ignore) setTranslatedText(translated);
+        } catch {
+          if (!ignore) {
+            setCorrectedText("Grammar correction failed. Please try again.");
+            setTranslatedText("Translation failed. Please try again. (अनुवाद में त्रुटि हुई है)");
+          }
+        } finally {
+          if (!ignore) setIsProcessing(false);
+        }
+      };
+      runAsync();
+    }, 1200); // 1200ms debounce
+    return () => {
+      ignore = true;
+      clearTimeout(handler);
+    };
+  }, [inputText]);
 
   // Translation function using MyMemory API (free)
   const translateToHindi = async (text: string): Promise<string> => {
@@ -62,12 +80,10 @@ const TextProcessor = () => {
     setIsProcessing(true);
     
     try {
-      const corrected = correctGrammar(inputText);
+      const corrected = await grammarCorrect(inputText);
       const translated = await translateToHindi(corrected);
-      
       setCorrectedText(corrected);
       setTranslatedText(translated);
-      
       toast({
         title: "Text processed successfully!",
         description: "Grammar corrected and translated to Hindi",
@@ -103,10 +119,10 @@ const TextProcessor = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-muted to-secondary p-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+          <h1 className="text-gray-800 text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
             Grammar Fixer & Language Translator
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-lg text-gray-800">
             Perfect your text with AI-powered grammar correction and instant translation
           </p>
         </div>
@@ -115,7 +131,7 @@ const TextProcessor = () => {
           {/* Input Section */}
           <Card className="h-fit shadow-lg border-0 bg-card/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-primary">
+              <CardTitle className="flex items-center gap-2 text-primary text-gray-800">
                 <Wand2 className="w-5 h-5" />
                 Input Text
               </CardTitle>
@@ -130,7 +146,7 @@ const TextProcessor = () => {
               <Button 
                 onClick={processText}
                 disabled={!inputText.trim() || isProcessing}
-                className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300 shadow-md"
+                className="text-gray-100 w-full bg-indigo-900 hover:opacity-90 transition-all duration-300 shadow-md cursor-pointer"
               >
                 {isProcessing ? (
                   <>Processing...</>
@@ -150,8 +166,8 @@ const TextProcessor = () => {
             <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center justify-between text-accent">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5" />
+                  <div className="flex items-center gap-2 text-gray-800">
+                    <CheckCircle className="w-5 h-5 text-gray-800" />
                     Grammar Corrected
                   </div>
                   {correctedText && (
@@ -159,9 +175,9 @@ const TextProcessor = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(correctedText, "Corrected text")}
-                      className="border-accent/30 hover:bg-accent/10"
+                      className=""
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-4 h-4 text-gray-800 hover:scale-50" />
                     </Button>
                   )}
                 </CardTitle>
@@ -183,8 +199,8 @@ const TextProcessor = () => {
             <Card className="shadow-lg border-0 bg-card/80 backdrop-blur-sm">
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center justify-between text-primary">
-                  <div className="flex items-center gap-2">
-                    <Languages className="w-5 h-5" />
+                  <div className="flex items-center gap-2 text-gray-800">
+                    <Languages className="text-gray-800 w-5 h-5" />
                     Hindi Translation
                   </div>
                   {translatedText && (
@@ -192,9 +208,9 @@ const TextProcessor = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => copyToClipboard(translatedText, "Translation")}
-                      className="border-primary/30 hover:bg-primary/10"
+                      className="hover:scale-75"
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-4 h-4 text-gray-800 hover:scale-50" />
                     </Button>
                   )}
                 </CardTitle>
