@@ -241,7 +241,7 @@ const TextProcessor = () => {
 
         <div className="mt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            Perfect for Chrome extension integration • Real-time processing • Copy with one click
+            Coded by lovable.dev, analyzed by Copilot but fixed by Prachi! 😴
           </p>
         </div>
       </div>
